@@ -1,0 +1,31 @@
+name: continuous-integration Pipeline
+
+on: [pull_request, push, issue]
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Construir backend
+        run: npm run build --prefix backend
+
+      - name: Construir frontend
+        run: npm run build --prefix frontend
+
+      - name: Rodar testes backend
+        run: npm run test --prefix backend
+
+      - name: Rodar testes frontend
+        run: npm run test --prefix frontend
