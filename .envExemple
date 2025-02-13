@@ -1,0 +1,8 @@
+
+# URL de conexão com o db
+
+DATABASE_URL=
+
+
+#aplicacao
+PORT=
