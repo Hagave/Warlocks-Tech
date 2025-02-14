@@ -1,8 +1,15 @@
+#docker-compose
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
 
 # URL de conexão com o db
 
 DATABASE_URL=
 
-
 #aplicacao
 PORT=
+
+#Keys
+
+SECRET_KEY=
