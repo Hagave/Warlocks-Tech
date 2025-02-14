@@ -1,11 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HttpStatus } from '@nestjs/common';
 import { UsersController } from '../users.controller';
 import { UsersService } from '../users.service';
+import {
+  JWTController,
+  UserControllerMocks,
+  UserDto,
+} from '../__moks__/user.controller.mock';
+import { JwtService } from '@nestjs/jwt';
 
 describe('UsersController', () => {
   let controller: UsersController;
-  let service: UsersService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -13,38 +17,47 @@ describe('UsersController', () => {
       providers: [
         {
           provide: UsersService,
-          useValue: {
-            createUser: jest.fn(),
-            updateUser: jest.fn(),
-            deleteUser: jest.fn(),
-          },
+          useValue: UserControllerMocks,
+        },
+        {
+          provide: JwtService,
+          useValue: JWTController,
         },
       ],
     }).compile();
 
     controller = module.get<UsersController>(UsersController);
-    service = module.get<UsersService>(UsersService);
   });
 
-  describe('createUser', () => {
-    it('deve criar um usuário com sucesso', async () => {
-      const dto = { name: 'Joao', email: 'joao@teste.com' };
-      (service.createUser as jest.Mock).mockResolvedValue({
-        success: true,
-        message: 'Usuario criado com sucesso!',
-        status: HttpStatus.CREATED,
-        user: { userId: 1, ...dto },
-      });
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
 
-      const result = await controller.createUser(dto);
+  it('deve chamar UserService.createuser com os dados corretos', async () => {
+    const serviceSpy = jest
+      .spyOn(UserControllerMocks, 'createUser')
+      .mockResolvedValue(undefined);
+    await controller.createUser(UserDto);
 
-      expect(result).toEqual({
-        success: true,
-        message: 'Usuario criado com sucesso!',
-        status: HttpStatus.CREATED,
-        user: { userId: 1, ...dto },
-      });
-      expect(service.createUser).toHaveBeenCalledWith(dto); // Verifica se o service foi chamado corretamente
-    });
+    expect(serviceSpy).toHaveBeenCalledWith(UserDto);
+  });
+
+  it('deve chamar a UserService.update com os dados corretos', async () => {
+    const serviceSpy = jest
+      .spyOn(UserControllerMocks, 'updateUser')
+      .mockResolvedValue(undefined);
+
+    await controller.update('1', UserDto);
+    expect(serviceSpy).toHaveBeenCalledWith(1, UserDto);
+  });
+
+  it('deve chamar a UserService.delete com os dados corretos', async () => {
+    const serviceSpy = jest
+      .spyOn(UserControllerMocks, 'deleteUser')
+      .mockResolvedValue(undefined);
+
+    await controller.remove('1');
+
+    expect(serviceSpy).toHaveBeenCalledWith(1);
   });
 });
