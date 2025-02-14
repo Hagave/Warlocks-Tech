@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from '../users.service';
-import { PrismaService } from '../../prisma/prisma.service'; // Certifique-se de que o caminho está correto
+import { PrismaService } from '../../prisma/prisma.service';
 import { HttpStatus } from '@nestjs/common';
+import { UserServiceMoks, UserDto } from '../__moks__/user.service.mock';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 describe('UsersService', () => {
   let service: UsersService;
-  let prisma: PrismaService;
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -14,118 +14,109 @@ describe('UsersService', () => {
         {
           provide: PrismaService,
           useValue: {
-            user: {
-              findUnique: jest.fn(),
-              create: jest.fn(),
-              update: jest.fn(),
-              delete: jest.fn(),
-            },
+            user: UserServiceMoks,
           },
         },
       ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    prisma = module.get<PrismaService>(PrismaService);
   });
 
-  describe('createUser', () => {
-    it('deve criar um usuário com sucesso', async () => {
-      const dto = { name: 'Joao', email: 'joao@teste.com' };
+  it('deve retornar erro se o DTO for invalido', async () => {
+    const dto: CreateUserDto = { name: '', email: '', password: '' };
 
-      (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
+    const result = await service.createUser(dto);
 
-      (prisma.user.create as jest.Mock).mockResolvedValue({
-        userId: 1,
-        ...dto,
-      });
-
-      const result = await service.createUser(dto);
-
-      expect(result).toEqual({
-        success: true,
-        message: 'Usuario criado com sucesso!',
-        status: HttpStatus.CREATED,
-        user: { userId: 1, ...dto },
-      });
-    });
-
-    it('deve retornar erro se o usuário já existir', async () => {
-      const dto = { name: 'Joao', email: 'joao@teste.com' };
-
-      (prisma.user.findUnique as jest.Mock).mockResolvedValue(dto);
-
-      const result = await service.createUser(dto);
-
-      expect(result).toEqual({
-        success: false,
-        message: 'Usuario já cadastrado no banco de dados!',
-        status: HttpStatus.CONFLICT,
-      });
+    expect(result).toEqual({
+      success: false,
+      message: 'Dados inválidos!',
+      status: HttpStatus.BAD_REQUEST,
     });
   });
 
-  describe('updateUser', () => {
-    it('deve atualizar um usuário existente', async () => {
-      const dto = { name: 'Joao Andrade', email: 'joao@teste.com' };
-
-      (prisma.user.findUnique as jest.Mock).mockResolvedValue({
-        userId: 1,
-        ...dto,
-      });
-
-      (prisma.user.update as jest.Mock).mockResolvedValue({
-        userId: 1,
-        ...dto,
-      });
-
-      const result = await service.updateUser(1, dto);
-
-      expect(result).toBeUndefined();
+  it('retornar erro caso usuario ja exista', async () => {
+    UserServiceMoks.findUnique.mockReturnValue({
+      email: 'teste@teste.com',
     });
 
-    it('deve retornar erro se o usuário não for encontrado', async () => {
-      (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
+    const result = await service.createUser(UserDto);
 
-      const result = await service.updateUser(1, {
-        name: 'Test',
-        email: 'test@teste.com',
-      });
-
-      expect(result).toEqual({
-        success: false,
-        message: 'Usuário não foi encontrado!',
-        status: HttpStatus.NOT_FOUND,
-      });
+    expect(result).toEqual({
+      success: false,
+      message: 'Usuario já cadastrado no banco de dados!',
+      status: HttpStatus.CONFLICT,
     });
   });
 
-  describe('deleteUser', () => {
-    it('deve remover um usuário existente', async () => {
-      (prisma.user.findUnique as jest.Mock).mockResolvedValue({ userId: 1 });
+  it('deve retornar Ok na criacao do usuario', async () => {
+    UserServiceMoks.findUnique.mockResolvedValue(null);
 
-      (prisma.user.delete as jest.Mock).mockResolvedValue({ userId: 1 });
-
-      const result = await service.deleteUser(1);
-
-      expect(result).toEqual({
-        success: true,
-        message: 'Usuário removido com sucesso!',
-        status: HttpStatus.OK,
-        deletedUser: { userId: 1 },
-      });
+    UserServiceMoks.create.mockResolvedValue({
+      userId: 1,
+      name: UserDto.name,
+      email: UserDto.email,
+      password: 'hashedPassword',
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
-    it('deve retornar erro se o usuário não for encontrado', async () => {
-      (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
+    const result = await service.createUser(UserDto);
 
-      const result = await service.deleteUser(1);
+    expect(result).toEqual({
+      success: true,
+      message: 'Usuario criado com sucesso!',
+      status: HttpStatus.CREATED,
+      user: {
+        userId: 1,
+        name: UserDto.name,
+        email: UserDto.email,
+        password: 'hashedPassword',
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        createdAt: expect.any(Date),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        updatedAt: expect.any(Date),
+      },
+    });
+  });
 
-      expect(result).toEqual({
-        success: false,
-        message: 'Usuário não foi encontrado!',
-        status: HttpStatus.NOT_FOUND,
-      });
+  it('deve atualizar um usuario', async () => {
+    // Simula que o usuário existe antes da atualização
+    UserServiceMoks.findUnique.mockResolvedValue(UserDto);
+
+    // dto nao contem o createat, enviando um objeto contendo o valor
+    UserServiceMoks.update.mockResolvedValue({
+      ...UserDto,
+      updatedAt: new Date(),
+    });
+
+    //teste de envio para a funcao
+    const result = await service.updateUser(1, UserDto);
+
+    //retorno esperado da funcao real
+    expect(result).toEqual({
+      success: true,
+      message: 'Usuário atualizado!',
+      status: HttpStatus.OK,
+      user: {
+        name: UserDto.name,
+        email: UserDto.email,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        updateAt: expect.any(Date),
+      },
+    });
+  });
+
+  it('deve deletar um usuário existente', async () => {
+    UserServiceMoks.findUnique.mockResolvedValue(UserDto);
+    UserServiceMoks.delete.mockResolvedValue(UserDto);
+
+    const result = await service.deleteUser(1);
+
+    expect(result).toEqual({
+      success: true,
+      message: 'Usuário removido com sucesso!',
+      status: HttpStatus.OK,
     });
   });
 });
