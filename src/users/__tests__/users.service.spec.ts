@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from '../users.service';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -77,28 +78,22 @@ describe('UsersService', () => {
         name: UserDto.name,
         email: UserDto.email,
         password: 'hashedPassword',
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         createdAt: expect.any(Date),
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         updatedAt: expect.any(Date),
       },
     });
   });
 
   it('deve atualizar um usuario', async () => {
-    // Simula que o usuário existe antes da atualização
     UserServiceMoks.findUnique.mockResolvedValue(UserDto);
 
-    // dto nao contem o createat, enviando um objeto contendo o valor
     UserServiceMoks.update.mockResolvedValue({
       ...UserDto,
       updatedAt: new Date(),
     });
 
-    //teste de envio para a funcao
     const result = await service.updateUser(1, UserDto);
 
-    //retorno esperado da funcao real
     expect(result).toEqual({
       success: true,
       message: 'Usuário atualizado!',
@@ -106,7 +101,6 @@ describe('UsersService', () => {
       user: {
         name: UserDto.name,
         email: UserDto.email,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         updateAt: expect.any(Date),
       },
     });

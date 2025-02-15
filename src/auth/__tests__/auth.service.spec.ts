@@ -83,10 +83,10 @@ describe('AuthService', () => {
     expect(result).toEqual({
       success: true,
       message: 'Login bem-sucedido',
-      user: {
-        user: { userId: 1, email: AuthMoks.email },
-        token: { access_token: 'mocked-token' },
-      },
+
+      user: { userId: 1, email: AuthMoks.email },
+      token: { access_token: 'mocked-token' },
+
       status: HttpStatus.OK,
     });
   });

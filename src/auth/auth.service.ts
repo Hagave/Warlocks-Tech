@@ -55,11 +55,10 @@ export class AuthService {
       return {
         success: true,
         message: 'Login bem-sucedido',
-        user: {
-          user: result,
-          token: {
-            access_token: await this.jwtService.signAsync(payload),
-          },
+
+        user: result,
+        token: {
+          access_token: await this.jwtService.signAsync(payload),
         },
 
         status: HttpStatus.OK,
