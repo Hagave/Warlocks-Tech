@@ -10,7 +10,6 @@ import {
 
 describe('NotesService', () => {
   let service: NotesService;
-  let prismaMock: { note: { findUnique: jest.Mock; findFirst: jest.Mock } };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

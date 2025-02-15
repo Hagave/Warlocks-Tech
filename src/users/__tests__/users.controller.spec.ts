@@ -47,7 +47,10 @@ describe('UsersController', () => {
       .spyOn(UserControllerMocks, 'updateUser')
       .mockResolvedValue(undefined);
 
-    await controller.update('1', UserDto);
+    const userId = { user: { sub: 1 } };
+
+    await controller.update(UserDto, userId);
+
     expect(serviceSpy).toHaveBeenCalledWith(1, UserDto);
   });
 
@@ -55,8 +58,9 @@ describe('UsersController', () => {
     const serviceSpy = jest
       .spyOn(UserControllerMocks, 'deleteUser')
       .mockResolvedValue(undefined);
+    const userId = { user: { sub: 1 } };
 
-    await controller.remove('1');
+    await controller.remove(userId);
 
     expect(serviceSpy).toHaveBeenCalledWith(1);
   });
