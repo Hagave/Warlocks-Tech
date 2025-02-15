@@ -4,6 +4,9 @@ export const UserServiceMoks = {
   update: jest.fn(),
   delete: jest.fn(),
 };
+export const NotesMock = {
+  deleteMany: jest.fn(),
+};
 
 export const UserDto = {
   name: 'Teste',

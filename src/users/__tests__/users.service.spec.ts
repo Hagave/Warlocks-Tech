@@ -2,7 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from '../users.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { HttpStatus } from '@nestjs/common';
-import { UserServiceMoks, UserDto } from '../__moks__/user.service.mock';
+import {
+  UserServiceMoks,
+  UserDto,
+  NotesMock,
+} from '../__moks__/user.service.mock';
 import { CreateUserDto } from '../dto/create-user.dto';
 
 describe('UsersService', () => {
@@ -15,6 +19,7 @@ describe('UsersService', () => {
           provide: PrismaService,
           useValue: {
             user: UserServiceMoks,
+            notes: NotesMock,
           },
         },
       ],
@@ -107,15 +112,15 @@ describe('UsersService', () => {
     });
   });
 
-  it('deve deletar um usuário existente', async () => {
+  it('deve deletar um usuário e notas existentes associadas a ele', async () => {
     UserServiceMoks.findUnique.mockResolvedValue(UserDto);
     UserServiceMoks.delete.mockResolvedValue(UserDto);
-
+    NotesMock.deleteMany.mockResolvedValue({ count: 3 });
     const result = await service.deleteUser(1);
 
     expect(result).toEqual({
       success: true,
-      message: 'Usuário removido com sucesso!',
+      message: 'Usuário e notas associadas foram removidos com sucesso!',
       status: HttpStatus.OK,
     });
   });
