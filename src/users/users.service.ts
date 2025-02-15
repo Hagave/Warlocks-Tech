@@ -124,9 +124,13 @@ export class UsersService {
         where: { userId: id },
       });
 
+      await this.prisma.notes.deleteMany({
+        where: { userId: id },
+      });
+
       return {
         success: true,
-        message: 'Usuário removido com sucesso!',
+        message: 'Usuário e notas associadas foram removidos com sucesso!',
         status: HttpStatus.OK,
       };
     } catch (error) {
