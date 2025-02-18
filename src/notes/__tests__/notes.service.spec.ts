@@ -84,7 +84,8 @@ describe('NotesService', () => {
       success: true,
       message: 'Nota encontrada com sucesso!',
       status: 201,
-      findAllUserNotes: [
+      userNotes: [
+        // Alterei a chave para userNotes
         {
           noteId: 4,
           title: 'Primeira nota',
