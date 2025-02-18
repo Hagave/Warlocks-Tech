@@ -36,14 +36,14 @@ export class NotesService {
 
   async findAllNotes(userId: number) {
     try {
-      const findAllUserNotes = await this.prisma.notes.findMany({
+      const userNotes = await this.prisma.notes.findMany({
         where: { userId: userId },
       });
       return {
         success: true,
         message: 'Nota encontrada com sucesso!',
         status: HttpStatus.CREATED,
-        findAllUserNotes,
+        userNotes,
       };
     } catch (error) {
       return {

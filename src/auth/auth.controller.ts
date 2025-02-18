@@ -10,12 +10,12 @@ import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Auth')
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('signin')
+  @Post('sign-in')
   @HttpCode(HttpStatus.OK)
   signIn(@Body(new ValidationPipe()) authDto: AuthDto) {
     return this.authService.signIn(authDto);
