@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { hashPassword } from '../utils/bcrypt';
+import { comparePassword, hashPassword } from '../utils/bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -79,13 +79,50 @@ export class UsersService {
     }
 
     try {
+      const isUser = await comparePassword(
+        updateUserDto.password,
+        existedUser.password,
+      );
+
+      if (!isUser) {
+        return {
+          success: false,
+          message: 'Por favor, reveja suas credenciais!',
+          status: HttpStatus.FORBIDDEN,
+        };
+      }
+      if (!updateUserDto.newPassword) {
+        const userUpdated = await this.prisma.user.update({
+          where: { userId: id },
+          data: {
+            name: updateUserDto.name,
+            email: updateUserDto.email,
+          },
+        });
+        return {
+          success: true,
+          message: 'Usuário atualizado!',
+          status: HttpStatus.OK,
+          user: {
+            name: userUpdated.name,
+            email: userUpdated.email,
+            createdAt: userUpdated.createdAt,
+            updatedAt: userUpdated.updatedAt,
+          },
+        };
+      }
+
+      // Se a nova senha for passada, faz a alteração da senha também
+      const hashedPassword = await hashPassword(updateUserDto.newPassword);
       const userUpdated = await this.prisma.user.update({
         where: { userId: id },
         data: {
           name: updateUserDto.name,
           email: updateUserDto.email,
+          password: hashedPassword, // Atualiza a senha
         },
       });
+
       return {
         success: true,
         message: 'Usuário atualizado!',
@@ -93,7 +130,8 @@ export class UsersService {
         user: {
           name: userUpdated.name,
           email: userUpdated.email,
-          updateAt: userUpdated.updatedAt,
+          createdAt: userUpdated.createdAt,
+          updatedAt: userUpdated.updatedAt,
         },
       };
     } catch (error) {

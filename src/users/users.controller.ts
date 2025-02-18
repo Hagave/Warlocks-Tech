@@ -20,7 +20,7 @@ import { ApiOperation } from '@nestjs/swagger';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('sign-up')
   @ApiOperation({
     description: 'Criação de cadastro do usuário',
   })

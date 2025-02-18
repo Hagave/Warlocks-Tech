@@ -10,6 +10,11 @@ import {
 } from '../__moks__/user.service.mock';
 import { CreateUserDto } from '../dto/create-user.dto';
 
+jest.mock('../../utils/bcrypt', () => ({
+  comparePassword: jest.fn(),
+  hashPassword: jest.fn(),
+}));
+
 describe('UsersService', () => {
   let service: UsersService;
   beforeEach(async () => {
@@ -84,25 +89,25 @@ describe('UsersService', () => {
     });
   });
 
-  it('deve atualizar um usuario', async () => {
-    UserServiceMoks.findUnique.mockResolvedValue(UserDto);
+  it('deve retornar erro atualizar um usuario com senha errada', async () => {
+    UserServiceMoks.findUnique.mockResolvedValue({
+      name: 'Teste',
+      email: 'teste@teste.com',
+      password: 'hashedPassword',
+    });
 
     UserServiceMoks.update.mockResolvedValue({
       ...UserDto,
+      password: 'hashedPassword',
       updatedAt: new Date(),
     });
 
     const result = await service.updateUser(1, UserDto);
 
     expect(result).toEqual({
-      success: true,
-      message: 'Usuário atualizado!',
-      status: HttpStatus.OK,
-      user: {
-        name: UserDto.name,
-        email: UserDto.email,
-        updateAt: expect.any(Date),
-      },
+      message: 'Por favor, reveja suas credenciais!',
+      status: 403,
+      success: false,
     });
   });
 
