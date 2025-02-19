@@ -1,100 +1,191 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <a href="https://github.com/nestjs/nest" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Descrição
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Backend - Teste técnico Warlocks Tech
 
-## Description
+### Existem 2 versões deste projeto.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Nota:
 
-## Project setup
+#### Este é o guia para rodar o projeto local. Caso queira rodar ele com docker, vá para a branch [PROD/DOCKER](https://github.com/Hagave/Warlocks-Tech/prod/docker)
+
+[prod/local]() <- você está aqui
+
+[prod/docker](https://github.com/Hagave/Warlocks-Tech/prod/docker)
+
+## Informações importantes
+
+Você pode fazer chamadas diretas para a api usando o postman/insomnia ou a documentação da api que está localizada [aqui](http://localhost:3000/api/docs#/)
+
+Mas é altamente recomendável que use o frontend para fazer essas requisições.
+
+Voce consegue baixar o [FrontEnd aqui](https://github.com/Hagave/Warlock-Tech-FE).
+
+## PROD/LOCAL
+
+### Pré-requisitos
+
+Antes de rodar o projeto, você precisa instalar:
+
+✅ [Node.js 20+](https://nodejs.org/pt/download)
+
+✅ [PostgreSQL 15+](https://www.postgresql.org/download/)
+
+✅ [Git](https://git-scm.com/downloads) caso queira alterar entre as branchs
+
+##### Não precisa reinstalar caso já tenha.
+
+## Instalação
+
+### Windows
+
+Durante a instalação, guarde a senha do usuário postgres.
+
+Após a instalação, abra o pgAdmin ou use o Terminal para criar o banco de dados:
 
 ```bash
-$ npm install
+$ CREATE DATABASE warlocks_db;
 ```
-
-## Compile and run the project
 
 ```bash
-# development
-$ docker-compose up --build
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ netstat -ano | findstr :5432
 ```
 
-## Run tests
+### macOS
+
+Instale via Homebrew:
+
+```bash
+$ brew install postgresql
+```
+
+Inicie o serviço:
+
+```bash
+$ brew services start postgresql
+```
+
+Crie o banco:
+
+```bash
+$ createdb warlocks_db
+
+```
+
+### Linux (Ubuntu/Debian)
+
+Instale:
+
+```bash
+$ sudo apt update
+$ sudo apt install postgresql postgresql-contrib
+```
+
+Inicie o serviço:
+
+```bash
+sudo systemctl start postgresql
+```
+
+Crie o banco:
+
+```bash
+sudo -u postgres psql -c "CREATE DATABASE warlocks_db;"
+```
+
+## Rodando o projeto
+
+### Clone o repositório da branch local/prod
+
+Crie o arquivo .env na raiz do projeto:
+
+Gerar SECRET_KEY [AQUI](https://jwt.io/)
+
+.env
+
+```
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=warlocks_db
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/warlocks_db?schema=public"
+SECRET_KEY=gereUmaChaveEColeAqui
+```
+
+PORT=3000
+
+Instale as dependências
+
+```bash
+npm install
+```
+
+Rodar as migrations do Prisma
+
+```bash
+npx prisma migrate dev
+```
+
+Iniciar o backend
+
+```bash
+npm run start
+```
+
+## Rodar testes unitários
 
 ```bash
 # unit tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Deployment
+## Desenvolvimento
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+[x] Back-end (Node.js / NestJS ou Express)
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+[x] Autenticação
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+[x] Rota de registro (inserir usuário no banco).
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+[x] Rota de login (retornar token JWT).
 
-## Resources
+[x] Middleware/Guard para proteger as rotas que manipulam notas,
+exigindo que o usuário esteja logado.
 
-Check out a few resources that may come in handy when working with NestJS:
+### CRUD de Notas
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+[x] Criar, listar, atualizar e excluir notas.
 
-## Support
+[x] Cada nota deve estar associada ao usuário que a criou, garantindo
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+que um usuário não veja ou manipule notas de outro.
 
-## Stay in touch
+[x] Banco de Dados (MongoDB ou outro de sua preferência)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+[x] Coleção de usuários (com campos básicos: email, senha hash).
 
-## License
+[x] Coleção de notas (referência ao usuário + título e descrição).
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Boas Práticas
+
+[x] Organização mínima em pastas (controllers, services, etc., caso use
+
+NestJS).
+
+[x] Tratamento básico de erros (ex.: usuário não encontrado, falha de
+autenticação).
+
+### Plus
+
+[x] PipeLine Github Actions para CI-CD
+
+[x] Documentação da api [aqui](http://localhost:3000/api/docs#/) <--- Troque pela porta que o projeto se encontra
+
+[x] Rota para editar e deletar usuário
+
+## Meus contatos
+
+- Héverton Vinícius - [Linkedin](https://www.linkedin.com/in/heverton-vinicius/)
+- Email - [hagavepro@gmail.com]()
