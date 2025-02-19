@@ -98,7 +98,7 @@ sudo -u postgres psql -c "CREATE DATABASE warlocks_db;"
 
 ## Rodando o projeto
 
-### Clone o repositório da branch local/prod
+### Clone o repositório da branch prod/local
 
 Crie o arquivo .env na raiz do projeto:
 
