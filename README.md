@@ -123,9 +123,14 @@ npm install
 ```
 
 Rodar as migrations do Prisma
+Caso pergunte algo no console, apenas aperte enter.
 
 ```bash
 npx prisma migrate dev
+```
+
+```bash
+npx prisma generate
 ```
 
 Iniciar o backend
