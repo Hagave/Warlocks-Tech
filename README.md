@@ -10,11 +10,11 @@
 
 Nota:
 
-#### Este é o guia para rodar o projeto local. Caso queira rodar ele com docker, vá para a branch [PROD/DOCKER](https://github.com/Hagave/Warlocks-Tech/prod/docker)
+#### Este é o guia para rodar o projeto com docker. Caso queira rodar ele local, vá para a branch [PROD/DOCKER](https://github.com/Hagave/Warlocks-Tech/prod/local)
 
-[prod/local]() <- você está aqui
+[prod/local](https://github.com/Hagave/Warlocks-Tech/prod/local)
 
-[prod/docker](https://github.com/Hagave/Warlocks-Tech/prod/docker)
+[prod/docker]() <- você está aqui
 
 ## Informações importantes
 
@@ -24,81 +24,9 @@ Mas é altamente recomendável que use o frontend para fazer essas requisições
 
 Voce consegue baixar o [FrontEnd aqui](https://github.com/Hagave/Warlock-Tech-FE).
 
-## PROD/LOCAL
-
-### Pré-requisitos
-
-Antes de rodar o projeto, você precisa instalar:
-
-✅ [Node.js 20+](https://nodejs.org/pt/download)
-
-✅ [PostgreSQL 15+](https://www.postgresql.org/download/)
-
-✅ [Git](https://git-scm.com/downloads) caso queira alterar entre as branchs
-
-##### Não precisa reinstalar caso já tenha.
-
-## Instalação
-
-### Windows
-
-Durante a instalação, guarde a senha do usuário postgres.
-
-Após a instalação, abra o pgAdmin ou use o Terminal para criar o banco de dados:
-
-```bash
-$ CREATE DATABASE warlocks_db;
-```
-
-```bash
-$ netstat -ano | findstr :5432
-```
-
-### macOS
-
-Instale via Homebrew:
-
-```bash
-$ brew install postgresql
-```
-
-Inicie o serviço:
-
-```bash
-$ brew services start postgresql
-```
-
-Crie o banco:
-
-```bash
-$ createdb warlocks_db
-
-```
-
-### Linux (Ubuntu/Debian)
-
-Instale:
-
-```bash
-$ sudo apt update
-$ sudo apt install postgresql postgresql-contrib
-```
-
-Inicie o serviço:
-
-```bash
-sudo systemctl start postgresql
-```
-
-Crie o banco:
-
-```bash
-sudo -u postgres psql -c "CREATE DATABASE warlocks_db;"
-```
-
 ## Rodando o projeto
 
-### Clone o repositório da branch local/prod
+### Clone o repositório da branch prod/docker
 
 Crie o arquivo .env na raiz do projeto:
 
@@ -112,34 +40,98 @@ POSTGRES_PASSWORD=postgres
 POSTGRES_DB=warlocks_db
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/warlocks_db?schema=public"
 SECRET_KEY=gereUmaChaveEColeAqui
-```
-
 PORT=3000
-
-Instale as dependências
-
-```bash
-npm install
 ```
 
-Rodar as migrations do Prisma
+## Você precisa garantir que o serviço docker esteja rodando antes dos passos!
+
+### Windows (WSL ou Docker Desktop)
+
+#### Verifique se o Docker está rodando
+
+No terminal (CMD, PowerShell ou Git Bash), rode:
 
 ```bash
-npx prisma migrate dev
+docker info
 ```
 
-Iniciar o backend
+Se aparecer algo como "Cannot connect to the Docker daemon", o Docker não está rodando.
+
+### Inicie o Docker
+
+Se estiver usando Docker Desktop, abra o programa manualmente.
+
+Se estiver usando o WSL (Windows Subsystem for Linux), rode:
 
 ```bash
-npm run start
+sudo service docker start
 ```
 
-## Rodar testes unitários
+### Linux (Ubuntu, Debian)
+
+Verifique se o Docker está rodando
 
 ```bash
-# unit tests
-$ npm run test
+systemctl is-active docker
 ```
+
+Se a saída for inactive, significa que o Docker não está rodando.
+
+Se estiver usando Docker Desktop, abra o programa manualmente.
+
+Ou tente o comando pelo terminal e inicie o Docker
+
+```bash
+sudo systemctl start docker
+```
+
+### MacOS
+
+docker info
+
+```bash
+sudo systemctl start docker
+```
+
+Se der erro, significa que o Docker não está ligado.
+
+Inicie o Docker
+
+Abra o Docker Desktop manualmente.
+
+Ou, no terminal, tente rodar:
+
+```bash
+open /Applications/Docker.app
+```
+
+Após certificar que o serviço do docker está rodando, tente o comando abaixo
+
+```bash
+docker-compose up --build -d
+```
+
+Rodar os comandos do Prisma dentro do container do backend
+
+Como o backend agora está rodando dentro do Docker, você precisa executar os comandos dentro do container, assim:
+
+```bash
+#gerar o prisma
+docker exec -it backend npx prisma generate
+#Criar os schemas no banco
+docker exec -it backend npx prisma migrate deploy
+
+```
+
+Isso iniciará:
+
+✅ O PostgreSQL.
+
+✅ As migrations do prisma.
+
+✅ E o backend.
+
+Se tudo estiver certo, seu backend estará rodando em [Aqui](http://localhost:3000)
 
 ## Desenvolvimento
 
