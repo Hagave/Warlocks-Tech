@@ -116,11 +116,12 @@ Rodar os comandos do Prisma dentro do container do backend
 Como o backend agora está rodando dentro do Docker, você precisa executar os comandos dentro do container, assim:
 
 ```bash
-#gerar o prisma
-docker exec -it backend npx prisma generate
-#Criar os schemas no banco
+# gerar o prisma
+docker exec -it backend npx prisma migrate dev --name init
+# Aplicar as Migrações no Banco de Dados
 docker exec -it backend npx prisma migrate deploy
-
+# Gerar o Prisma Client
+docker exec -it backend npx prisma generate
 ```
 
 Isso iniciará:
