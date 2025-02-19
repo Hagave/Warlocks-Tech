@@ -34,7 +34,6 @@ describe('NotesService', () => {
       noteId: 1,
       title: 'Título teste',
       description: 'Descrição teste',
-      userId: 2,
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     });
@@ -50,7 +49,6 @@ describe('NotesService', () => {
         noteId: 1,
         title: 'Título teste',
         description: 'Descrição teste',
-        userId: 2,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
       },
@@ -63,7 +61,6 @@ describe('NotesService', () => {
         noteId: 4,
         title: 'Primeira nota',
         description: 'Descricao 1',
-        userId: 4,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -71,7 +68,6 @@ describe('NotesService', () => {
         noteId: 5,
         title: 'Primeira nota',
         description: 'Descricao 1',
-        userId: 4,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -82,15 +78,14 @@ describe('NotesService', () => {
 
     expect(result).toEqual({
       success: true,
-      message: 'Nota encontrada com sucesso!',
-      status: 201,
-      userNotes: [
+      message: 'Notas encontradas com sucesso!',
+      status: 200,
+      sanitizedNotes: [
         // Alterei a chave para userNotes
         {
           noteId: 4,
           title: 'Primeira nota',
           description: 'Descricao 1',
-          userId: 4,
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
         },
@@ -98,7 +93,6 @@ describe('NotesService', () => {
           noteId: 5,
           title: 'Primeira nota',
           description: 'Descricao 1',
-          userId: 4,
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
         },
@@ -112,7 +106,6 @@ describe('NotesService', () => {
       noteId: 1,
       title: 'titulo 1',
       description: 'descricao 1',
-      userId: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -129,7 +122,6 @@ describe('NotesService', () => {
         noteId: 1,
         title: 'titulo 1',
         description: 'descricao 1',
-        userId: 1,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
       },
@@ -140,7 +132,6 @@ describe('NotesService', () => {
       noteId: 1,
       title: 'Primeiro titulo',
       description: 'Descricao qualquer',
-      userId: 2,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -156,7 +147,6 @@ describe('NotesService', () => {
         noteId: 1,
         title: 'Primeiro titulo',
         description: 'Descricao qualquer',
-        userId: 2,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
       },
@@ -168,7 +158,6 @@ describe('NotesService', () => {
       noteId: 1,
       title: 'Primeiro titulo',
       description: 'Descricao qualquer',
-      userId: 2,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -177,7 +166,6 @@ describe('NotesService', () => {
       noteId: 1,
       title: 'Primeiro titulo',
       description: 'Descricao qualquer',
-      userId: 2,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -194,7 +182,6 @@ describe('NotesService', () => {
         noteId: 1,
         title: 'Primeiro titulo',
         description: 'Descricao qualquer',
-        userId: 2,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
       },

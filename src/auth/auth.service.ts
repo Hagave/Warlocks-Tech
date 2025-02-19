@@ -28,7 +28,7 @@ export class AuthService {
       if (!existUser) {
         return {
           success: false,
-          message: 'Usuario nao encontrado',
+          message: 'Usuário não encontrado',
           status: HttpStatus.NOT_FOUND,
         };
       }
@@ -56,7 +56,12 @@ export class AuthService {
         success: true,
         message: 'Login bem-sucedido',
 
-        user: result,
+        user: {
+          name: result.name,
+          email: result.email,
+          createdAt: result.createdAt,
+          updatedAt: result.updatedAt,
+        },
         token: {
           access_token: await this.jwtService.signAsync(payload),
         },

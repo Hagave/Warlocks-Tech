@@ -22,7 +22,13 @@ export class NotesService {
         success: true,
         message: 'Nota criada com sucesso!',
         status: HttpStatus.CREATED,
-        createNote,
+        createNote: {
+          noteId: createNote.noteId,
+          title: createNote.title,
+          description: createNote.description,
+          createdAt: createNote.createdAt,
+          updatedAt: createNote.updatedAt,
+        },
       };
     } catch (error) {
       return {
@@ -39,16 +45,25 @@ export class NotesService {
       const userNotes = await this.prisma.notes.findMany({
         where: { userId: userId },
       });
+      const sanitizedNotes = userNotes.map(
+        ({ noteId, title, description, createdAt, updatedAt }) => ({
+          noteId,
+          title,
+          description,
+          createdAt,
+          updatedAt,
+        }),
+      );
       return {
         success: true,
-        message: 'Nota encontrada com sucesso!',
-        status: HttpStatus.CREATED,
-        userNotes,
+        message: 'Notas encontradas com sucesso!',
+        status: HttpStatus.OK,
+        sanitizedNotes,
       };
     } catch (error) {
       return {
-        success: true,
-        message: 'Nao foi possivel buscar notas criadas pelo usuario!',
+        success: false,
+        message: 'Não foi possivel buscar notas criadas pelo usuario!',
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         error,
       };
@@ -74,7 +89,13 @@ export class NotesService {
         success: true,
         message: 'Nota encontrada com sucesso!',
         status: HttpStatus.OK,
-        findUniqueNote,
+        findUniqueNote: {
+          noteId: findUniqueNote.noteId,
+          title: findUniqueNote.title,
+          description: findUniqueNote.description,
+          createdAt: findUniqueNote.createdAt,
+          updatedAt: findUniqueNote.updatedAt,
+        },
       };
     } catch (error) {
       return {
@@ -101,7 +122,13 @@ export class NotesService {
         success: true,
         message: 'Nota atualizada com sucesso!',
         status: HttpStatus.OK,
-        updateUserNote,
+        updateUserNote: {
+          noteId: updateUserNote.noteId,
+          title: updateUserNote.title,
+          description: updateUserNote.description,
+          createdAt: updateUserNote.createdAt,
+          updatedAt: updateUserNote.updatedAt,
+        },
       };
     } catch (error) {
       return {
@@ -119,18 +146,17 @@ export class NotesService {
         where: { noteId, userId },
       });
 
-      if (!userNote) {
-        return {
-          success: false,
-          message: 'Erro ao buscar essa nota.',
-          status: HttpStatus.NOT_FOUND,
-        };
-      }
       return {
         success: true,
         message: 'Nota deletada com sucesso!',
         status: HttpStatus.OK,
-        userNote,
+        userNote: {
+          noteId: userNote.noteId,
+          title: userNote.title,
+          description: userNote.description,
+          createdAt: userNote.createdAt,
+          updatedAt: userNote.updatedAt,
+        },
       };
     } catch (error) {
       return {

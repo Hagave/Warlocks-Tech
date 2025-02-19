@@ -28,7 +28,7 @@ export class UsersService {
     if (existedUser) {
       return {
         success: false,
-        message: 'Usuario já cadastrado no banco de dados!',
+        message: 'Usuário já cadastrado no banco de dados!',
         status: HttpStatus.CONFLICT,
       };
     }
@@ -45,9 +45,14 @@ export class UsersService {
       });
       return {
         success: true,
-        message: 'Usuario criado com sucesso!',
+        message: 'Usuário criado com sucesso!',
         status: HttpStatus.CREATED,
-        user,
+        user: {
+          name: user.name,
+          email: user.email,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        },
       };
     } catch {
       return {
@@ -87,7 +92,7 @@ export class UsersService {
       if (!isUser) {
         return {
           success: false,
-          message: 'Por favor, reveja suas credenciais!',
+          message: 'Dados incorretos. Por favor, reveja suas credenciais!',
           status: HttpStatus.FORBIDDEN,
         };
       }
@@ -158,17 +163,18 @@ export class UsersService {
     }
 
     try {
-      await this.prisma.user.delete({
+      await this.prisma.notes.deleteMany({
         where: { userId: id },
       });
 
-      await this.prisma.notes.deleteMany({
+      await this.prisma.user.delete({
         where: { userId: id },
       });
 
       return {
         success: true,
-        message: 'Usuário e notas associadas foram removidos com sucesso!',
+        message:
+          'Usuário e notas associadas foram removidos com sucesso! Você será deslogado em breve',
         status: HttpStatus.OK,
       };
     } catch (error) {
