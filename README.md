@@ -100,7 +100,7 @@ sudo -u postgres psql -c "CREATE DATABASE warlocks_db;"
 
 ### Clone o repositório da branch prod/local
 
-Crie o arquivo .env na raiz do projeto:
+Edite o .env.exemple para .env na raiz do projeto:
 
 Gerar SECRET_KEY [AQUI](https://jwt.io/)
 
