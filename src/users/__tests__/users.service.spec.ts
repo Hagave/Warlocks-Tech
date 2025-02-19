@@ -55,19 +55,17 @@ describe('UsersService', () => {
 
     expect(result).toEqual({
       success: false,
-      message: 'Usuario já cadastrado no banco de dados!',
+      message: 'Usuário já cadastrado no banco de dados!',
       status: HttpStatus.CONFLICT,
     });
   });
 
-  it('deve retornar Ok na criacao do usuario', async () => {
+  it('deve retornar CREATED na criacao do usuario', async () => {
     UserServiceMoks.findUnique.mockResolvedValue(null);
 
     UserServiceMoks.create.mockResolvedValue({
-      userId: 1,
       name: UserDto.name,
       email: UserDto.email,
-      password: 'hashedPassword',
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -76,13 +74,11 @@ describe('UsersService', () => {
 
     expect(result).toEqual({
       success: true,
-      message: 'Usuario criado com sucesso!',
+      message: 'Usuário criado com sucesso!',
       status: HttpStatus.CREATED,
       user: {
-        userId: 1,
         name: UserDto.name,
         email: UserDto.email,
-        password: 'hashedPassword',
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
       },
@@ -105,7 +101,7 @@ describe('UsersService', () => {
     const result = await service.updateUser(1, UserDto);
 
     expect(result).toEqual({
-      message: 'Por favor, reveja suas credenciais!',
+      message: 'Dados incorretos. Por favor, reveja suas credenciais!',
       status: 403,
       success: false,
     });
@@ -119,7 +115,8 @@ describe('UsersService', () => {
 
     expect(result).toEqual({
       success: true,
-      message: 'Usuário e notas associadas foram removidos com sucesso!',
+      message:
+        'Usuário e notas associadas foram removidos com sucesso! Você será deslogado em breve',
       status: HttpStatus.OK,
     });
   });

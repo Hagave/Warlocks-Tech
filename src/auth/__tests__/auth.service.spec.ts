@@ -46,7 +46,7 @@ describe('AuthService', () => {
 
     expect(result).toEqual({
       success: false,
-      message: 'Usuario nao encontrado',
+      message: 'Usuário não encontrado',
       status: HttpStatus.NOT_FOUND,
     });
   });
@@ -71,7 +71,6 @@ describe('AuthService', () => {
 
   it('should return OK and a token if login is successful', async () => {
     prismaMock.user.findUnique.mockResolvedValue({
-      userId: 1,
       email: AuthMoks.email,
       password: 'hashedpassword',
     });
@@ -84,7 +83,7 @@ describe('AuthService', () => {
       success: true,
       message: 'Login bem-sucedido',
 
-      user: { userId: 1, email: AuthMoks.email },
+      user: { email: AuthMoks.email },
       token: { access_token: 'mocked-token' },
 
       status: HttpStatus.OK,
