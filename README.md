@@ -107,10 +107,10 @@ Gerar SECRET_KEY [AQUI](https://jwt.io/)
 .env
 
 ```
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=warlocks_db
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/warlocks_db?schema=public"
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=admin
+POSTGRES_DB=warlocks_tech
+DATABASE_URL="postgresql://admin:admin@localhost:5432/warlocks_db?schema=public"
 SECRET_KEY=gereUmaChaveEColeAqui
 ```
 
