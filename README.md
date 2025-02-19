@@ -136,47 +136,47 @@ Se tudo estiver certo, seu backend estará rodando em [Aqui](http://localhost:30
 
 ## Desenvolvimento
 
-[x] Back-end (Node.js / NestJS ou Express)
+[ x ] Back-end (Node.js / NestJS ou Express)
 
-[x] Autenticação
+[ x ] Autenticação
 
-[x] Rota de registro (inserir usuário no banco).
+[ x ] Rota de registro (inserir usuário no banco).
 
-[x] Rota de login (retornar token JWT).
+[ x ] Rota de login (retornar token JWT).
 
-[x] Middleware/Guard para proteger as rotas que manipulam notas,
+[ x ] Middleware/Guard para proteger as rotas que manipulam notas,
 exigindo que o usuário esteja logado.
 
 ### CRUD de Notas
 
-[x] Criar, listar, atualizar e excluir notas.
+[ x ] Criar, listar, atualizar e excluir notas.
 
-[x] Cada nota deve estar associada ao usuário que a criou, garantindo
+[ x ] Cada nota deve estar associada ao usuário que a criou, garantindo
 
 que um usuário não veja ou manipule notas de outro.
 
-[x] Banco de Dados (MongoDB ou outro de sua preferência)
+[ x ] Banco de Dados (MongoDB ou outro de sua preferência)
 
-[x] Coleção de usuários (com campos básicos: email, senha hash).
+[ x ] Coleção de usuários (com campos básicos: email, senha hash).
 
-[x] Coleção de notas (referência ao usuário + título e descrição).
+[ x ] Coleção de notas (referência ao usuário + título e descrição).
 
 ### Boas Práticas
 
-[x] Organização mínima em pastas (controllers, services, etc., caso use
+[ x ] Organização mínima em pastas (controllers, services, etc., caso use
 
 NestJS).
 
-[x] Tratamento básico de erros (ex.: usuário não encontrado, falha de
+[ x ] Tratamento básico de erros (ex.: usuário não encontrado, falha de
 autenticação).
 
 ### Plus
 
-[x] PipeLine Github Actions para CI-CD
+[ x ] PipeLine Github Actions para CI-CD
 
-[x] Documentação da api [aqui](http://localhost:3000/api/docs#/) <--- Troque pela porta que o projeto se encontra
+[ x ] Documentação da api [aqui](http://localhost:3000/api/docs#/) <--- Troque pela porta que o projeto se encontra
 
-[x] Rota para editar e deletar usuário
+[ x ] Rota para editar e deletar usuário
 
 ## Meus contatos
 
